@@ -104,7 +104,7 @@ namespace SincroStock.Comunes.Negocio
             }
             else if ((now - cfg.FechaUltimaNotificacionEmail.Value).TotalMinutes < cfg.AlertasFlushInterval)
             {
-                LogUtil.LogWithGui(logger, Level.Debug, $"Finalizado. Han pasado {Convert.ToInt64((now - cfg.FechaUltimaNotificacionEmail.Value).TotalMinutes)} minutos desde la última notificación. Frecuencia máxima configurada {cfg.AlertasFlushInterval} minutos.", false);
+                LogUtil.LogWithGui(logger, Level.Debug, $"Finalizado. Han pasado {((now - cfg.FechaUltimaNotificacionEmail.Value).TotalMinutes).ToString()} minutos desde la última notificación. Frecuencia máxima configurada {cfg.AlertasFlushInterval} minutos.", false);
             }
             else
             {

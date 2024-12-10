@@ -178,7 +178,7 @@ namespace SincroStock.Comunes.Negocio
                 }
                 else
                 {
-                    LogUtil.LogWithGui(logger, Level.Info, "No se encontraron archivos para procesar", true);
+                    LogUtil.LogWithGui(logger, Level.Info, "No se encontraron movimientos para procesar", true);
                 }
 
                 if (this.Modo == ModoEjecucion.SERVICIO)

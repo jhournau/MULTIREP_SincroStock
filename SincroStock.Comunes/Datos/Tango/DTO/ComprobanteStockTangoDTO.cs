@@ -18,7 +18,7 @@ namespace SincroStock.Comunes.Datos.Tango.DTO
         public string N_COMP { get; set; }
         public string COD_PRO_CL { get; set; }
         public DateTime? FECHA_ANU { get; set; }
-        public EnumEstadoMovimientoStockTango ESTADO_MOV { get; set; }
+        public EnumEstadoMovimientoStockTango? ESTADO_MOV { get; set; }
         public List<ComprobanteStockTangoItemDTO> Items { get; private set; } = new List<ComprobanteStockTangoItemDTO>();
 
 

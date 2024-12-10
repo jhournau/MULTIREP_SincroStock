@@ -115,8 +115,8 @@ namespace SincroStock.Comunes
         HORA = 0,
         [EnumDescription("minutos(s)")]
         MINUTO = 1,
-        //[EnumDescription("segundo(s)")]
-        //SEGUNDO = 2
+        [EnumDescription("segundo(s)")]
+        SEGUNDO = 2
 
     }
 

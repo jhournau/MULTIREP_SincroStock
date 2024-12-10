@@ -17,7 +17,7 @@ namespace SincroStock.Comunes.Datos.Tango.DTO
         public string ORIG_N_COMP { get; set; }
         public string ORIG_COD_PRO_CL { get; set; }
         public DateTime ORIG_FECHA_MOV { get; set; }
-        public EnumEstadoMovimientoStockTango ORIG_ESTADO_MOV { get; set; }
+        public EnumEstadoMovimientoStockTango? ORIG_ESTADO_MOV { get; set; }
         public EnumEstadoSincroStock ESTADO_SINCRO { get; set; }
         public string DETALLE_ULTIMA_SINCRO { get; set; }
         public DateTime? FECHA_ULTIMA_SINCRO { get; set; }

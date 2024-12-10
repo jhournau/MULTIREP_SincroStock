@@ -132,7 +132,7 @@ namespace SincroStock.Servicio.Negocio
                 DateTime horaDesde = new DateTime(momentoActual.Year, momentoActual.Month, momentoActual.Day, config.PlanificacionHoraEjecucionDesde.Hour, config.PlanificacionHoraEjecucionDesde.Minute, 0, 0);
                 DateTime horaHasta = new DateTime(momentoActual.Year, momentoActual.Month, momentoActual.Day, config.PlanificacionHoraEjecucionHasta.Hour, config.PlanificacionHoraEjecucionHasta.Minute, 0, 0).AddMinutes(1).AddMilliseconds(-1);
 
-                bool cumplePeriodoDeEjecucion = !momentoUltimaEjecucion.HasValue || (diferenciaEnMinutos(momentoActual, momentoUltimaEjecucion.Value) >= getMinutos(config.PlanificacionUnidadTiempo, config.PlanificacionPeriodo));
+                bool cumplePeriodoDeEjecucion = !momentoUltimaEjecucion.HasValue || (diferenciaEnSegundos(momentoActual, momentoUltimaEjecucion.Value) >= getSegundos(config.PlanificacionUnidadTiempo, config.PlanificacionPeriodo));
                 bool cumpleRangoHorario = DateTime.Compare(horaDesde, horaHasta) < 0 ?
                     DateTime.Compare(momentoActual, horaDesde) >= 0 && DateTime.Compare(momentoActual, horaHasta) <= 0 :
                     DateTime.Compare(momentoActual, horaDesde) >= 0 || DateTime.Compare(momentoActual, horaHasta) <= 0;
@@ -143,24 +143,26 @@ namespace SincroStock.Servicio.Negocio
                 return false;
         }
 
-        private long getMinutos(UnidadTiempo unidad, int valor)
+        private double getSegundos(UnidadTiempo unidad, int valor)
         {
             if (unidad == UnidadTiempo.HORA)
-                return valor * 60;
+                return Convert.ToDouble(valor * 60 * 60);
             else if (unidad == UnidadTiempo.MINUTO)
-                return valor;
+                return Convert.ToDouble(valor * 60);
+            else if (unidad == UnidadTiempo.SEGUNDO)
+                return Convert.ToDouble(valor);
 
             return -1;
         }
 
-        private long diferenciaEnMinutos(DateTime fecha1, DateTime fecha2)
+        private double diferenciaEnSegundos(DateTime fecha1, DateTime fecha2)
         {
             if (fecha1.CompareTo(fecha2) < 0)
                 return -1;
             else
             {
                 TimeSpan ts = fecha1 - fecha2;
-                return Convert.ToInt64(ts.TotalMinutes);
+                return ts.TotalSeconds;
             }
         }
 

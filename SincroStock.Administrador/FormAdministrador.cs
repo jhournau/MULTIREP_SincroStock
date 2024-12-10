@@ -484,7 +484,7 @@ namespace SincroStock.Administrador
         {
             switch (unidad)
             {
-                //case UnidadTiempo.SEGUNDO: return 604800;
+                case UnidadTiempo.SEGUNDO: return 604800;
                 case UnidadTiempo.MINUTO: return 10080;
                 default: return 168;
             }
@@ -558,7 +558,7 @@ namespace SincroStock.Administrador
 
         private void btnProbarEnvioMail_Click(object sender, EventArgs e)
         {
-            UtilsIFC.EnviarMailNotificacion("Prueba envío email", "", this.txtDestinatariosAlertas.Text);
+            UtilsIFC.EnviarMailNotificacion(config.AsuntoEmail + " (prueba de envío)", "", this.txtDestinatariosAlertas.Text);
         }
 
 

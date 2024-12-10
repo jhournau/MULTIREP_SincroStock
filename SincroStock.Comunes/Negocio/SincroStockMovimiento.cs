@@ -39,7 +39,7 @@ namespace SincroStock.Comunes.Negocio
                 detalleSincro += this.SincroMovimientoOrigenDTO.ORIG_T_COMP + " ";
                 detalleSincro += this.SincroMovimientoOrigenDTO.ORIG_N_COMP;
                 detalleSincro += String.IsNullOrEmpty(this.SincroMovimientoOrigenDTO.ORIG_COD_PRO_CL) ? "" : " " + this.SincroMovimientoOrigenDTO.ORIG_COD_PRO_CL;
-                detalleSincro += " | Estado Mov: " + this.SincroMovimientoOrigenDTO.ORIG_ESTADO_MOV.GetDescription();
+                detalleSincro += " | Estado Mov: " + (this.SincroMovimientoOrigenDTO.ORIG_ESTADO_MOV?.GetDescription() ?? "");
                 detalleSincro += " | Fecha Mov " + this.SincroMovimientoOrigenDTO.ORIG_FECHA_MOV.ToString("dd/MM/yyyy");
                 detalleSincro += " | Fecha Anu: " + (this.SincroMovimientoOrigenDTO.ComprobanteStock.FECHA_ANU.HasValue ? this.SincroMovimientoOrigenDTO.ComprobanteStock.FECHA_ANU.Value.ToString("dd/MM/yyyy") : "");
                 detalleSincro += " | Estado Sincro: " + SincroMovimientoOrigenDTO.ESTADO_SINCRO.GetDescription();
@@ -81,6 +81,7 @@ namespace SincroStock.Comunes.Negocio
             {
                 LogUtil.Log(logger, Level.Debug, $"Ingresando a {nameof(SincronizarAjuste)}()");
 
+                
                 bool asignarIdentificadorComprobanteDesdeDestino = false;
                 SincroMovimientoStockDestinoDTO sincroDestinoDTO;
 
@@ -158,6 +159,7 @@ namespace SincroStock.Comunes.Negocio
             try
             {
                 LogUtil.Log(logger, Level.Debug, $"Ingresando a {nameof(SincronizarAnulacionAjuste)}()");
+
 
                 bool ajusteAnulacionGenerado = false;
                 bool asignarIdentificadorComprobanteDesdeDestino = false;
@@ -269,11 +271,12 @@ namespace SincroStock.Comunes.Negocio
                 IgnorarInhabilitacionArticulo = true,
                 UsarPartidaDefaultEnCasoDeNoDetectarPartidasAutomaticamente = false,
                 FechaEmision = this.SincroMovimientoOrigenDTO.ComprobanteStock.FECHA_MOV,
-                Leyenda1 = $"{this.SincroMovimientoOrigenDTO.ComprobanteStock.TCOMP_IN_S} {this.SincroMovimientoOrigenDTO.ComprobanteStock.N_COMP} {this.SincroMovimientoOrigenDTO.ComprobanteStock.NCOMP_IN_S}",
+                Leyenda1 = $"{this.SincroMovimientoOrigenDTO.ComprobanteStock.TCOMP_IN_S.GetEnumValueName()} {this.SincroMovimientoOrigenDTO.ComprobanteStock.NCOMP_IN_S}",
                 Leyenda2 = $"{this.SincroMovimientoOrigenDTO.ComprobanteStock.T_COMP} {this.SincroMovimientoOrigenDTO.ComprobanteStock.N_COMP} {this.SincroMovimientoOrigenDTO.ComprobanteStock.COD_PRO_CL}",
                 TerminalIngreso = Dns.GetHostName()?.ToUpper() ?? "",
                 UsuarioIngreso = "IFC",
-                TipoComprobante = cfg.TipoComprobanteAjusteStock
+                TipoComprobante = cfg.TipoComprobanteAjusteStock,
+                PermitirArticulosConSeriesSiNoEsObligatorio = true
             };
 
             foreach(var gItem in this.SincroMovimientoOrigenDTO.ComprobanteStock.Items.GroupBy(i => (i.COD_DEPOSI_DESTINO, i.COD_ARTICU)))
@@ -306,12 +309,13 @@ namespace SincroStock.Comunes.Negocio
                 IgnorarInhabilitacionArticulo = true,
                 UsarPartidaDefaultEnCasoDeNoDetectarPartidasAutomaticamente = false,
                 FechaEmision = this.SincroMovimientoOrigenDTO.ComprobanteStock.FECHA_ANU.Value,
-                Leyenda1 = $"{this.SincroMovimientoOrigenDTO.ComprobanteStock.TCOMP_IN_S} {this.SincroMovimientoOrigenDTO.ComprobanteStock.N_COMP} {this.SincroMovimientoOrigenDTO.ComprobanteStock.NCOMP_IN_S}",
+                Leyenda1 = $"{this.SincroMovimientoOrigenDTO.ComprobanteStock.TCOMP_IN_S.GetEnumValueName()} {this.SincroMovimientoOrigenDTO.ComprobanteStock.NCOMP_IN_S}",
                 Leyenda2 = $"{this.SincroMovimientoOrigenDTO.ComprobanteStock.T_COMP} {this.SincroMovimientoOrigenDTO.ComprobanteStock.N_COMP} {this.SincroMovimientoOrigenDTO.ComprobanteStock.COD_PRO_CL}",
                 Leyenda3 = "ANULACION EN ORIGEN",
                 TerminalIngreso = Dns.GetHostName()?.ToUpper() ?? "",
                 UsuarioIngreso = "IFC",
-                TipoComprobante = cfg.TipoComprobanteAjusteStock
+                TipoComprobante = cfg.TipoComprobanteAjusteStock,
+                PermitirArticulosConSeriesSiNoEsObligatorio = true
             };
 
             foreach (var item in comprobanteTangoDTO.Items)

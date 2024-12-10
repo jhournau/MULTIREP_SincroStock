@@ -56,7 +56,7 @@ namespace SincroStock.Comunes.Datos.Tango.DAO
                     {
                         identificadorMov = (TCOMP_IN_S: DataConversion.GetValueFromSQL<string>(sqlReader, "TCOMP_IN_S"),
                                             NCOMP_IN_S: DataConversion.GetValueFromSQL<string>(sqlReader, "NCOMP_IN_S"));
-                        comprobanteStockDTO = GetComprobanteStockTangoOrigenDTO(sqlReader);
+                        comprobanteStockDTO = GetComprobanteStockTangoDTO(sqlReader);
                         movimientosDTODictio[identificadorMov].ComprobanteStock = comprobanteStockDTO;
                     }
                     sqlReader.NextResult();
@@ -103,7 +103,7 @@ namespace SincroStock.Comunes.Datos.Tango.DAO
                 ORIG_N_COMP = DataConversion.GetValueFromSQL<string>(sqlReader, nameof(SincroMovimientoStockOrigenDTO.ORIG_N_COMP)),
                 ORIG_COD_PRO_CL = DataConversion.GetValueFromSQL<string>(sqlReader, nameof(SincroMovimientoStockOrigenDTO.ORIG_COD_PRO_CL)),
                 ORIG_FECHA_MOV = DataConversion.GetValueFromSQL<DateTime>(sqlReader, nameof(SincroMovimientoStockOrigenDTO.ORIG_FECHA_MOV)),
-                ORIG_ESTADO_MOV = DataConversion.GetValueFromSQL<EnumEstadoMovimientoStockTango>(sqlReader, nameof(SincroMovimientoStockOrigenDTO.ORIG_ESTADO_MOV)),
+                ORIG_ESTADO_MOV = DataConversion.GetValueFromSQL<EnumEstadoMovimientoStockTango?>(sqlReader, nameof(SincroMovimientoStockOrigenDTO.ORIG_ESTADO_MOV), defaultValue: null, raiseConversionException: false),
                 ESTADO_SINCRO = DataConversion.GetValueFromSQL<EnumEstadoSincroStock>(sqlReader, nameof(SincroMovimientoStockOrigenDTO.ESTADO_SINCRO)),
                 DETALLE_ULTIMA_SINCRO = DataConversion.GetValueFromSQL<string>(sqlReader, nameof(SincroMovimientoStockOrigenDTO.DETALLE_ULTIMA_SINCRO)),
                 FECHA_ULTIMA_SINCRO = DataConversion.GetValueFromSQL<DateTime?>(sqlReader, nameof(SincroMovimientoStockOrigenDTO.FECHA_ULTIMA_SINCRO)),
@@ -120,7 +120,7 @@ namespace SincroStock.Comunes.Datos.Tango.DAO
             };
         }
 
-        internal static ComprobanteStockTangoDTO GetComprobanteStockTangoOrigenDTO(SqlDataReader sqlReader)
+        internal static ComprobanteStockTangoDTO GetComprobanteStockTangoDTO(SqlDataReader sqlReader)
         {
             return new ComprobanteStockTangoDTO()
             {
@@ -131,7 +131,7 @@ namespace SincroStock.Comunes.Datos.Tango.DAO
                 T_COMP = DataConversion.GetValueFromSQL<string>(sqlReader, nameof(ComprobanteStockTangoDTO.T_COMP)),
                 N_COMP = DataConversion.GetValueFromSQL<string>(sqlReader, nameof(ComprobanteStockTangoDTO.N_COMP)),
                 COD_PRO_CL = DataConversion.GetValueFromSQL<string>(sqlReader, nameof(ComprobanteStockTangoDTO.COD_PRO_CL)),
-                ESTADO_MOV = DataConversion.GetValueFromSQL<EnumEstadoMovimientoStockTango>(sqlReader, nameof(ComprobanteStockTangoDTO.ESTADO_MOV)),
+                ESTADO_MOV = DataConversion.GetValueFromSQL<EnumEstadoMovimientoStockTango?>(sqlReader, nameof(ComprobanteStockTangoDTO.ESTADO_MOV), defaultValue: null, raiseConversionException: false),
                 FECHA_ANU = DataConversion.GetValueFromSQL<DateTime?>(sqlReader, nameof(ComprobanteStockTangoDTO.FECHA_ANU)),
 
             };
@@ -169,6 +169,7 @@ namespace SincroStock.Comunes.Datos.Tango.DAO
             var sincroDTO = new SincroMovimientoStockDestinoDTO()
             {
                 ID_HC_SINCRO_STOCK_MOVIMIENTO_DESTINO = DataConversion.GetValueFromSQL<int>(sqlReader, nameof(SincroMovimientoStockDestinoDTO.ID_HC_SINCRO_STOCK_MOVIMIENTO_DESTINO)),
+                ORIG_ID_STA14 = DataConversion.GetValueFromSQL<int>(sqlReader, nameof(SincroMovimientoStockDestinoDTO.ORIG_ID_STA14)),
                 ORIG_TCOMP_IN_S = DataConversion.GetValueFromSQL<EnumTipoComprobanteStockTango>(sqlReader, nameof(SincroMovimientoStockDestinoDTO.ORIG_TCOMP_IN_S)),
                 ORIG_NCOMP_IN_S = DataConversion.GetValueFromSQL<string>(sqlReader, nameof(SincroMovimientoStockDestinoDTO.ORIG_NCOMP_IN_S)),
                 ORIG_FECHA_MOV = DataConversion.GetValueFromSQL<DateTime>(sqlReader, nameof(SincroMovimientoStockDestinoDTO.ORIG_FECHA_MOV)),
@@ -185,7 +186,7 @@ namespace SincroStock.Comunes.Datos.Tango.DAO
                 DEST_ANU_T_COMP = DataConversion.GetValueFromSQL<string>(sqlReader, nameof(SincroMovimientoStockDestinoDTO.DEST_ANU_T_COMP)),
                 DEST_ANU_N_COMP = DataConversion.GetValueFromSQL<string>(sqlReader, nameof(SincroMovimientoStockDestinoDTO.DEST_ANU_N_COMP))            };
             if (sqlReader.GetColumnsNames().Contains(nameof(SincroMovimientoStockDestinoDTO.DEST_STA14_ESTADO_MOV)))
-                sincroDTO.DEST_STA14_ESTADO_MOV = DataConversion.GetValueFromSQL<EnumEstadoMovimientoStockTango>(sqlReader, nameof(SincroMovimientoStockDestinoDTO.DEST_STA14_ESTADO_MOV));
+                sincroDTO.DEST_STA14_ESTADO_MOV = DataConversion.GetValueFromSQL<EnumEstadoMovimientoStockTango?>(sqlReader, nameof(SincroMovimientoStockDestinoDTO.DEST_STA14_ESTADO_MOV), defaultValue: null, raiseConversionException: false);
 
             return sincroDTO;
         }
@@ -249,7 +250,7 @@ WHERE ID_HC_SINCRO_STOCK_MOVIMIENTO_ORIGEN = @ID_HC_SINCRO_STOCK_MOVIMIENTO_ORIG
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.ORIG_T_COMP), sincroDTO.ORIG_T_COMP);
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.ORIG_N_COMP), sincroDTO.ORIG_N_COMP);
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.ORIG_COD_PRO_CL), sincroDTO.ORIG_COD_PRO_CL);
-                sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.ORIG_ESTADO_MOV), sincroDTO.ORIG_ESTADO_MOV.GetEnumValueName());
+                sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.ORIG_ESTADO_MOV), sincroDTO.ORIG_ESTADO_MOV?.GetEnumValueName() ?? "");
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.ESTADO_SINCRO), sincroDTO.ESTADO_SINCRO.GetEnumValueName());
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.DETALLE_ULTIMA_SINCRO), sincroDTO.DETALLE_ULTIMA_SINCRO);
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.FECHA_ULTIMA_SINCRO), sincroDTO.FECHA_ULTIMA_SINCRO);
@@ -299,11 +300,16 @@ STA14.T_COMP,
 STA14.N_COMP,
 STA14.COD_PRO_CL,
 STA14.ESTADO_MOV,
-CASE WHEN ISNULL(STA14.FECHA_ANU,'18000101') = '18000101' THEN NULL ELSE STA14.FECHA_ANU END AS FECHA_ANU,
+CASE WHEN ISNULL(STA14.FECHA_ANU,'18000101') = '18000101' THEN NULL ELSE STA14.FECHA_ANU END AS FECHA_ANU
 FROM STA14
-WHERE EXISTS (SELECT TOP 1 1 FROM STA20 WHERE STA14.TCOMP_IN_S = STA20.TCOMP_IN_S AND STA14.NCOMP_IN_S = STA20.NCOMP_IN_S
+WHERE 
+STA14.TCOMP_IN_S = @TCOMP_IN_S 
+AND STA14.NCOMP_IN_S = @NCOMP_IN_S
+AND EXISTS (SELECT TOP 1 1 
+              FROM STA20
               INNER JOIN STA11 ON STA20.COD_ARTICU = STA11.COD_ARTICU
-              WHERE STA11.PROMO_MENU <> 'P'
+              WHERE STA14.TCOMP_IN_S = STA20.TCOMP_IN_S AND STA14.NCOMP_IN_S = STA20.NCOMP_IN_S
+              AND STA11.PROMO_MENU <> 'P'
               AND STA11.STOCK = 1)
 ORDER BY STA14.ID_STA14;
 
@@ -321,7 +327,9 @@ FROM STA14
 INNER JOIN STA20 ON STA14.TCOMP_IN_S = STA20.TCOMP_IN_S AND STA14.NCOMP_IN_S = STA20.NCOMP_IN_S
 INNER JOIN STA11 ON STA20.COD_ARTICU = STA11.COD_ARTICU
 WHERE 
-STA11.PROMO_MENU <> 'P'
+STA14.TCOMP_IN_S = @TCOMP_IN_S
+AND STA14.NCOMP_IN_S = @NCOMP_IN_S 
+AND STA11.PROMO_MENU <> 'P'
 AND STA11.STOCK = 1
 ORDER BY STA14.ID_STA14, STA20.ID_STA20;
 
@@ -335,7 +343,9 @@ INNER JOIN STA20 ON STA14.TCOMP_IN_S = STA20.TCOMP_IN_S AND STA14.NCOMP_IN_S = S
 INNER JOIN STA11 ON STA20.COD_ARTICU = STA11.COD_ARTICU
 INNER JOIN STA09 ON STA20.TCOMP_IN_S = STA09.TCOMP_IN_S AND STA20.NCOMP_IN_S = STA09.NCOMP_IN_S AND STA20.N_RENGL_S = STA09.N_RENGL_S
 WHERE 
-STA11.PROMO_MENU <> 'P'
+STA14.TCOMP_IN_S = @TCOMP_IN_S
+AND STA14.NCOMP_IN_S = @NCOMP_IN_S 
+AND STA11.PROMO_MENU <> 'P'
 AND STA11.STOCK = 1
 AND STA11.USA_PARTID = 1
 ORDER BY STA14.ID_STA14, STA20.ID_STA20, STA09.ID_STA09;
@@ -347,7 +357,7 @@ ORDER BY STA14.ID_STA14, STA20.ID_STA20, STA09.ID_STA09;
                 using (var sqlReader = sqlCmd.ExecuteReaderCustom(cfg.TangoDBCommandRetries, cfg.TangoDBCommandSecondsBetweenRetries, true))
                 {
                     sqlReader.Read();
-                    comprobanteStockDTO = GetComprobanteStockTangoOrigenDTO(sqlReader);
+                    comprobanteStockDTO = GetComprobanteStockTangoDTO(sqlReader);
                     sqlReader.NextResult();
                     while (sqlReader.Read())
                     {
@@ -412,9 +422,9 @@ WHERE ID_HC_SINCRO_STOCK_MOVIMIENTO_DESTINO = @ID_HC_SINCRO_STOCK_MOVIMIENTO_DES
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.ORIG_N_COMP), sincroDTO.ORIG_N_COMP);
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.ORIG_FECHA_MOV), sincroDTO.ORIG_FECHA_MOV);
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.ORIG_COD_PRO_CL), sincroDTO.ORIG_COD_PRO_CL);
-                sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.DEST_TCOMP_IN_S), sincroDTO.DEST_TCOMP_IN_S);
+                sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.DEST_TCOMP_IN_S), sincroDTO.DEST_TCOMP_IN_S.GetEnumValueName());
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.DEST_NCOMP_IN_S), sincroDTO.DEST_NCOMP_IN_S);
-                sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.DEST_ANU_TCOMP_IN_S), sincroDTO.DEST_ANU_TCOMP_IN_S);
+                sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.DEST_ANU_TCOMP_IN_S), sincroDTO.DEST_ANU_TCOMP_IN_S?.GetEnumValueName());
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.DEST_ANU_NCOMP_IN_S), sincroDTO.DEST_ANU_NCOMP_IN_S);
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDTO.FECHA_ULTIMA_SINCRO), sincroDTO.FECHA_ULTIMA_SINCRO);
 
@@ -490,7 +500,7 @@ SINCRO.ORIG_ID_STA14 = @ORIG_ID_STA14;
             {
                 LogUtil.Log(logger, Level.Debug, $"Grabando ajuste en Tango");
                 GC.Tango.Stock.Negocio.AjusteStock.Grabar(sqlConn, ajusteTango, sqlTran, cfg.TimeoutSqlCommandEnSegundosDestino);
-                sincroDestinoDTO.DEST_STA14_ESTADO_MOV = EnumEstadoMovimientoStockTango.P;
+                //sincroDestinoDTO.DEST_STA14_ESTADO_MOV = null;
                 sincroDestinoDTO.FECHA_ULTIMA_SINCRO = fechaSincro;
                 sincroDestinoDTO.DEST_TCOMP_IN_S = (EnumTipoComprobanteStockTango) Enum.Parse(typeof(EnumTipoComprobanteStockTango), ajusteTango.TipoComprobanteInterno);
                 sincroDestinoDTO.DEST_NCOMP_IN_S = ajusteTango.NumeroInternoNormalizado;
@@ -516,16 +526,17 @@ SINCRO.ORIG_ID_STA14 = @ORIG_ID_STA14;
                 //sqlCmd.CommandType = CommandType.StoredProcedure;
                 sqlCmd.CommandTimeout = ConfigGeneral.Instance.TimeoutSqlCommandEnSegundosDestino;
                 sqlCmd.CommandText = "SELECT ESTADO_MOV FROM STA14 WHERE TCOMP_IN_S = @DEST_TCOMP_IN_S AND STA14.NCOMP_IN_S = @DEST_NCOMP_IN_S;";
-                sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDestinoDTO.DEST_TCOMP_IN_S), sincroDestinoDTO.DEST_TCOMP_IN_S);
+                sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDestinoDTO.DEST_TCOMP_IN_S), sincroDestinoDTO.DEST_TCOMP_IN_S.GetEnumValueName());
                 sqlCmd.Parameters.AddWithValueNullable(nameof(sincroDestinoDTO.DEST_NCOMP_IN_S), sincroDestinoDTO.DEST_NCOMP_IN_S);
 
-                var estadoTango = DataConversion.GetValueFromSQL<EnumEstadoMovimientoStockTango>(sqlCmd.ExecuteScalarCustom(cfg.TangoDBCommandRetries, cfg.TangoDBCommandSecondsBetweenRetries, true), "STA14.ESTADO_MOV");
+                var estadoTango = DataConversion.GetValueFromSQL<EnumEstadoMovimientoStockTango?>(sqlCmd.ExecuteScalarCustom(cfg.TangoDBCommandRetries, cfg.TangoDBCommandSecondsBetweenRetries, true), 
+                    null, false, "STA14.ESTADO_MOV");
 
                 LogUtil.Log(logger, Level.Debug, $"Anulado: {(estadoTango == EnumEstadoMovimientoStockTango.A ? "SI" : "NO")}");
                 sincroDestinoDTO.FECHA_ULTIMA_SINCRO = fechaSincro;
                 if (estadoTango == EnumEstadoMovimientoStockTango.A)
                 {
-                    sincroDestinoDTO.DEST_STA14_ESTADO_MOV = EnumEstadoMovimientoStockTango.A;
+                    //sincroDestinoDTO.DEST_STA14_ESTADO_MOV = EnumEstadoMovimientoStockTango.A;
                     ajusteGenerado = false;
                 }
                 else
