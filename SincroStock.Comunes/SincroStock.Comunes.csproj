@@ -85,6 +85,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Tango - Sincro Stock.xlsm" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Datos\Tango\Resources\ScriptsDEF.sql">
@@ -93,6 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Tango - Sincro Stock README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
